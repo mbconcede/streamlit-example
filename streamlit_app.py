@@ -34,3 +34,6 @@ def main():
     if uploaded_file is not None:
         save_uploaded_file(uploaded_file)
         st.success("Файл успешно загружен!")
+
+if __name__ == "__main__":
+    main()
