@@ -1,40 +1,39 @@
-import altair as alt
-import numpy as np
-import pandas as pd
 import streamlit as st
+import os
 
-"""
-# Welcome to Streamlit!
+def save_uploaded_file(uploaded_file):
+    with open(os.path.join("./", uploaded_file.name), "wb") as f:
+        f.write(uploaded_file.getbuffer())
 
-Edit `/streamlit_app.py` to customize this app to your heart's desire :heart:.
-If you have any questions, checkout our [documentation](https://docs.streamlit.io) and [community
-forums](https://discuss.streamlit.io).
+def main():
+    # Set page configuration
+    st.set_page_config(
+        page_title="Загрузка MP3 файла",
+        page_icon="🎵",
+        layout="wide",
+        initial_sidebar_state="expanded",
+    )
 
-In the meantime, below is an example of what you can do with just a few lines of code:
-"""
+    # Custom CSS for background image
+    st.markdown(
+        """
+        <style>
+        body {
+            background-image: url('https://example.com/background_image.jpg');
+            background-size: cover;
+        }
+        </style>
+        """,
+        unsafe_allow_html=True,
+    )
 
-num_points = st.slider("Number of points in spiral", 1, 10000, 1100)
-num_turns = st.slider("Number of turns in spiral", 1, 300, 31)
+    st.title("Конспектор ^_^")
 
-indices = np.linspace(0, 1, num_points)
-theta = 2 * np.pi * num_turns * indices
-radius = indices
+    uploaded_file = st.file_uploader("Выберите MP3 файл", type=["mp3"])
 
-x = radius * np.cos(theta)
-y = radius * np.sin(theta)
+    if uploaded_file is not None:
+        save_uploaded_file(uploaded_file)
+        st.success("Файл успешно загружен!")
 
-df = pd.DataFrame({
-    "x": x,
-    "y": y,
-    "idx": indices,
-    "rand": np.random.randn(num_points),
-})
-
-st.altair_chart(alt.Chart(df, height=700, width=700)
-    .mark_point(filled=True)
-    .encode(
-        x=alt.X("x", axis=None),
-        y=alt.Y("y", axis=None),
-        color=alt.Color("idx", legend=None, scale=alt.Scale()),
-        size=alt.Size("rand", legend=None, scale=alt.Scale(range=[1, 150])),
-    ))
+if __name__ == "__main__":
+    main()
