@@ -1,27 +1,36 @@
 import streamlit as st
-import pandas as pd
+import os
 
-# Загрузка файла
-uploaded_file = st.file_uploader("Загрузите ваш файл", type="csv")
+def save_uploaded_file(uploaded_file):
+    with open(os.path.join("./", uploaded_file.name), "wb") as f:
+        f.write(uploaded_file.getbuffer())
 
-# Выбор языка вывода
-language = st.selectbox(
-   'Выберите язык вывода',
-   ('Русский', 'Английский', 'Французский')
-)
+def main():
+    # Set page configuration
+    st.set_page_config(
+        page_title="Загрузка MP3 файла",
+        page_icon="🎵",
+        layout="wide",
+        initial_sidebar_state="expanded",
+    )
 
-# Обработка файла
-if uploaded_file is not None:
-   data = pd.read_csv(uploaded_file)
-   st.write(data)
+    # Custom CSS for background image
+    st.markdown(
+        """
+        <style>
+        body {
+            background-image: url('https://example.com/background_image.jpg');
+            background-size: cover;
+        }
+        </style>
+        """,
+        unsafe_allow_html=True,
+    )
 
-# Кнопка "Пуск"
-if st.button('Пуск'):
-   # Здесь вы можете добавить код для обработки данных в выбранном языке
-   st.write('Обработка данных...')
+    st.title("Конспектор ^_^")
 
-# Кнопка для скачивания результата
-if st.button('Скачать результат'):
-   # Здесь вы можете добавить код для генерации и скачивания файла
-   st.write('Генерация файла...')
+    uploaded_file = st.file_uploader("Выберите MP3 файл", type=["mp3"])
 
+    if uploaded_file is not None:
+        save_uploaded_file(uploaded_file)
+        st.success("Файл успешно загружен!")
